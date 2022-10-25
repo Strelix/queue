@@ -10,26 +10,28 @@ class Vehicle:
         self.__model_type = model
         self.__door_count = door_count
         self.__seat_count = seat_count
+
         try:
             self.__wheel_count = int(wheel_count)
             self.__model_type = str(model)
             self.__door_count = int(door_count)
             self.__seat_count = int(seat_count)
         except:
-            pass
+            print('We\'ve had an error with making this vehicle.')
 
     def getInfo(self):
         return self.__wheel_count, self.__model_type, \
                self.__door_count, self.__seat_count
 
-
+    def getModel(self):
+        return self.__model_type
 class Queue:
     def __init__(self):
         self.__list = []
         self.maxItems = 3
 
     def addItem(self, item):
-        if not count(self.__list) >= 3:
+        if not len(self.__list) >= 3:
             return self.__list.append(item)
 
     def getItems(self):
@@ -57,6 +59,9 @@ while not Exit:
         result = str(result).lower()
         for commands_ in commands:
             if result in commands_:
+                if result in commands[3]:
+                    Exit = True
+                    print('Goodbye')
                 if result in commands[0]:
                     model = str(input('what model is the vehicle? \n >  '))
                     wheels = int(input('How many wheels does the vehicle have? \n >  '))
@@ -66,16 +71,20 @@ while not Exit:
                     try:
                         vehicle = Vehicle(wheels, model, doors, seats)
                         QUEUE.addItem(vehicle)
-                    except:
-                        print('We\'ve had an error with trying to make this vehicle. Please try again.')
-                        pass
+
+                        print(f'Added {vehicle.getModel()} to the list!')
+                    except Exception as error_message:
+                        print(f'You\'ve received an error, please try again. \n Error: {error_message}')
 
                 if result in commands[1]:
-                        print(QUEUE.removeItem())
+                    print(f'{QUEUE.removeItem().getModel()} has just been removed!')
                 if result in commands[2]:
-                    for item in QUEUE.getItems():
-                        print(item.getInfo())
-    except:
-        print('You\'ve received an error')
+                    if not QUEUE.getItems():
+                        print('Vehicle list is empty!')
+                    else:
+                        for item in QUEUE.getItems():
+                            print(item.getInfo())
+    except Exception as error_message:
+        print(f'You\'ve received an error, please try again. \n Error: {error_message}') # Stop the program from crashing
     finally:
-        input('')
+        input('') # Let the user press enter again before continuting
