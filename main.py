@@ -1,3 +1,9 @@
+# import customtkinter
+#
+# customtkinter.set_default_color_theme("dark-blue")
+# customtkinter.set_appearance_mode('dark')
+#
+
 class Vehicle:
     def __init__(self, wheel_count: int = 4, model: str = 'BMW', door_count: int = 4, seat_count: int = 5) -> object:
 
