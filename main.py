@@ -44,14 +44,14 @@ class Vehicle:
 
 class Queue:
     def __init__(self):
-        self.__list = []
-        self.__maxItems = 3
+        self.__list = [] # Where the list items are stored
+        self.__maxItems = 3 # Maximum list items
 
     def addItem(self, item):
         if not len(self.__list) >= self.__maxItems:
-            return self.__list.append(item)
+            return self.__list.append(item) # Appends it if it can "fit"
 
-        error(f"You've reached the maximum limit of vehicles. {self.__maxItems}")
+        app.error(f"You've reached the maximum limit of vehicles. {self.__maxItems}")
 
     def getItems(self):
         return self.__list
@@ -78,63 +78,6 @@ class Queue:
 
 
 QUEUE = Queue()
-
-
-# Exit = False  # If typed 4, the program should quit
-# from os import system as sys
-#
-# clear = lambda: sys('clear')
-# commands = [['1', 'add', 'add_item'], ['2', 'remove', 'remove_item'], ['3', 'view', 'list'], ['4', 'exit']]
-# while not Exit:
-#     try:
-#         clear()  # Clears the page before each command
-#         print('What would you like to do? \
-#           \n 1. Add item to list \
-#           \n 2. Remove last item from list \
-#           \n 3. View List \
-#           \n 4. Exit')
-#         result = input(' > ')  # Users input
-#         result = str(result).lower()
-#         for commands_ in commands:
-#             if result in commands_:
-#                 if result in commands[3]:
-#                     Exit = True
-#                     print('Goodbye')
-#
-#                 if result in commands[0]:
-#                     model = str(input('What model is the vehicle? \n >  '))
-#                     wheels = int(input('How many wheels does the vehicle have? (INT) \n >  '))
-#                     doors = int(input('How many doors does the vehicle have? (INT) \n >  '))
-#                     seats = int(input('How many seats does the vehicle have? (INT) \n >  '))
-#
-#                     try:
-#                         vehicle = Vehicle(wheels, model, doors, seats)  # Creates Vehicle
-#                         QUEUE.addItem(vehicle)  # Adds the vehicle to list
-#
-#                         print(f'Added {vehicle.getModel()} to the list!')
-#                     except Exception as error_message:
-#                         print(f'You\'ve received an error, please try again. \n Error: {error_message}')
-#
-
-#                 if result in commands[1]:
-#                     if not QUEUE.isQueueEmpty():
-#                         print(f'{QUEUE.removeItem().getModel()} has just been removed!')
-#                     else:
-#                         print('Vehicle list is already empty!')
-#                 if result in commands[2]:
-#                     if not QUEUE.getItems():
-#                         print('Vehicle list is empty!')
-#                     else:
-#                         arr = [item.getInfo()[1] for item in
-#                                QUEUE.getItems()]  # Makes an array with all of the model types
-#                         print(arr)
-#
-#     except Exception:
-#         print('We\'ve had an error with making this vehicle. Please use the correct data types (INTEGERS)')
-#         pass  # Stop the program from crashing
-#     finally:
-#         input('')  # Let the user press enter again before continuting
-
 
 class Page:
     def __init__(self):
@@ -314,10 +257,6 @@ class Window(customtkinter.CTk):
                                                            fg_color=secondary_colour,
                                                            command=lambda: PAGE.change_page('remove'))
         self.removeVehicleButton.pack(pady=(20, 0), padx=(10, 10))
-
-        # self.quiz_name_label = customtkinter.CTkLabel(master=self.right_top_frame, text=' ')
-        # self.quiz_name_label.configure(wrap='375')
-        # self.quiz_name_label.pack(side=customtkinter.TOP)
 
         self.right_bottom_list_text = customtkinter.CTkLabel(master=self.right_bottom_frame, text='All Vehicles:')
         self.right_bottom_list_text.pack(side=customtkinter.TOP)
