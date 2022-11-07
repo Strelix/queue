@@ -1,3 +1,7 @@
+###################################################################
+###                   OPEN CONSOLE IN FULL VIEW                 ###
+###################################################################
+
 import customtkinter
 
 customtkinter.set_default_color_theme("dark-blue")
@@ -34,7 +38,11 @@ class Vehicle:
         except:
             return app.error('We\'ve had an error with making this vehicle.')
 
-    def getInfo(self):  # Returns the properties of veh
+    def getInfo(self, display = False):  # Returns the properties of veh
+
+        if display:
+            return f'Wheels: {self.__wheel_count}   Model: {self.__model_type}    Doors: {self.__door_count}    Seats: {self.__seat_count}'
+
         return self.__wheel_count, self.__model_type, \
                self.__door_count, self.__seat_count
 
@@ -44,12 +52,12 @@ class Vehicle:
 
 class Queue:
     def __init__(self):
-        self.__list = [] # Where the list items are stored
-        self.__maxItems = 3 # Maximum list items
+        self.__list = []  # Where the list items are stored
+        self.__maxItems = 3  # Maximum list items
 
     def addItem(self, item):
         if not len(self.__list) >= self.__maxItems:
-            return self.__list.append(item) # Appends it if it can "fit"
+            return self.__list.append(item)  # Appends it if it can "fit"
 
         app.error(f"You've reached the maximum limit of vehicles. {self.__maxItems}")
 
@@ -78,6 +86,7 @@ class Queue:
 
 
 QUEUE = Queue()
+
 
 class Page:
     def __init__(self):
@@ -132,8 +141,8 @@ class Page:
                                                command=lambda: self.change_page('add_2', wheels=app.wheels.get(),
                                                                                 doors=app.doors.get(),
                                                                                 model=app.modelInput.get()),
-                                               pady=5)
-            app.next.pack(side=customtkinter.TOP)
+                                               )
+            app.next.pack(side=customtkinter.TOP, pady=(20, 0))
 
             self.addItemsToRemoveList(app.next, app.wheels, app.doors, app.doorsText, app.modelInput, app.modelText,
                                       app.wheelsText)
@@ -175,6 +184,8 @@ class Page:
         if str(page) == 'remove':
             self.currentPage = 'remove'
             self.removeItems()
+            app.createVehicleButton.configure(state='normal', fg_color=secondary_colour)
+            app.removeVehicleButton.configure(state='disabled', fg_color=active_colour)
 
             app.what_text = customtkinter.CTkLabel(master=app.right_top_frame,
                                                    text='What would you like to remove from the list?')
@@ -197,15 +208,26 @@ class Page:
                 return app.update_list()
 
             app.submit = customtkinter.CTkButton(master=app.right_top_frame, text='SUBMIT', fg_color=active_colour,
-                                                 command=lambda: submit())
+                                                 command=lambda: submit(), pady=15)
             app.submit.pack(side=customtkinter.TOP)
+
+            PAGE.addItemsToRemoveList(app.what, app.what_text, app.submit)
 
 
 class Window(customtkinter.CTk):
 
-    def update_list(self):
+    def update_list(self, mode='Model'):
         array = []
-        [array.append(item.getInfo()[1]) for item in QUEUE.getItems()]
+        # values = ['Model', 'Doors', 'All Information', 'Index']
+        if mode == 'All Information':
+            [array.append(item.getInfo(True)) for item in QUEUE.getItems()]
+        elif mode == 'Model':
+            [array.append(item.getInfo()[1]) for item in QUEUE.getItems()]
+        elif mode == 'Doors':
+            [array.append(item.getInfo()[2]) for item in QUEUE.getItems()]
+        elif mode == 'Index':
+            [array.append(len(array) + 1) for _ in QUEUE.getItems()]
+
         self.right_bottom_list.configure(text=array)
 
     def error(self, message='App error', colour='blue'):
@@ -257,6 +279,16 @@ class Window(customtkinter.CTk):
                                                            fg_color=secondary_colour,
                                                            command=lambda: PAGE.change_page('remove'))
         self.removeVehicleButton.pack(pady=(20, 0), padx=(10, 10))
+
+        self.viewMode = customtkinter.CTkOptionMenu(master=self.left_container,
+                                                    values=['Model', 'Doors', 'All Information', 'Index'])
+        self.viewMode.set('All Information')
+        self.viewMode.pack(side=customtkinter.TOP, pady=(20, 0))
+
+        self.viewModeButton = customtkinter.CTkButton(master=self.left_container, text='Change Mode',
+                                                      command=lambda: self.update_list(self.viewMode.current_value))
+
+        self.viewModeButton.pack(side=customtkinter.TOP, pady=(20, 0))
 
         self.right_bottom_list_text = customtkinter.CTkLabel(master=self.right_bottom_frame, text='All Vehicles:')
         self.right_bottom_list_text.pack(side=customtkinter.TOP)
